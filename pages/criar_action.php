@@ -3,16 +3,10 @@ session_start();
 include '../server/config.php';
 include '../models/Order.php';
 
-$type = $_POST['type'];
-$status = $_POST['status'];
-$description = $_POST['description'];
+$type = filter_input( INPUT_POST, 'type',FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW );
+$status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+$description = filter_input( INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 $creator = $_SESSION['name-user'];
-
-
-echo $type."<br>";
-echo $status."<br>";
-echo $description."<br>";
-echo $creator."<br>";
 
 $order = new Order();
 

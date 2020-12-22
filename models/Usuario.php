@@ -3,7 +3,7 @@ require_once '../models/Conn.php';
 
 class Usuario {
 
-    public function login( $email, $password, $conn ) {
+    public function login( $email, $password ) {
         $conn = new Conn();
 
         $sql = "SELECT * FROM users WHERE email = :email AND password = :password";

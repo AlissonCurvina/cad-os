@@ -1,7 +1,6 @@
 <?php
 require_once '../models/Conn.php';
 
-
 class Order {    
     public function list() {
         $conn = new Conn();
@@ -53,6 +52,14 @@ class Order {
         $sql->execute();
     }
 
+    public function updateStatus( $id_os, $update_status ) {
+        $conn = new Conn();
+
+        $sql = "UPDATE os SET status = '$update_status' WHERE id = '$id_os' ";
+        $sql = $conn->pdo->prepare($sql);
+        $sql->execute();
+    }
+
     public function listUpdates( $id_os ) {
         $conn = new Conn();
 
@@ -65,6 +72,4 @@ class Order {
             return $data;
         }
     }
-
 }
-

@@ -17,8 +17,7 @@
     <link rel="stylesheet" href="../assets/myframework.css"/>
     <link rel="stylesheet" href="../assets/main.css"/>
 
-    <script defer src="../assets/main.js"></script>
+    <script defer type="module" src="../assets/main.js"></script>
 </head>
 
 <body>
-    

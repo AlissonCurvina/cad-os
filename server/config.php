@@ -1,8 +1,5 @@
 <?php
-require_once '../models/Conn.php';
-$conn = new Conn();
-
-
-    
-
-
+$dbName = 'cad-os';
+$dbUser = 'phpmyadmin';
+$dbHost = 'localhost';
+$dbPwd = '201161';

@@ -1,6 +1,13 @@
 <?php
+session_start();
 include '../server/config.php';
 include '../partials/head.php';
+
+if( isset($_SESSION['id-user']) ) {
+    header('location: ./main.php');    
+    exit;
+}
+
 ?>
 
 <main class="login">

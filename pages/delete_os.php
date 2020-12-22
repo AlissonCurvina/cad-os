@@ -2,10 +2,12 @@
 include '../server/config.php';
 include '../models/Order.php';
 
-$id = $_GET['id'];
+$id = $_POST['id'];
 
-$order = new Order();
+if( isset($id) ) {
+    $order = new Order();
 
-$order->deleteOrder( $id );
+    $order->deleteOrder( $id );
+}
 
 header("location: main.php");

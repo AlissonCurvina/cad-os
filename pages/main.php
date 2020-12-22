@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if( !$_SESSION['id-user'] ) {
+    header('location: ./login.php');    
+    exit;
+}
+
 include '../partials/head.php';
 include '../partials/header.php';
 include '../models/Order.php';
@@ -41,9 +47,12 @@ $data = $list->list();
                     <td class="align-middle"><?= $order['id'];?></td>
                     <td class="align-middle"><?= $order['update_time'];?></td>
                     <td class="align-middle"><?= $order['update_user'];?></td>
-                    <td>
-                        <button type="button" class="btn btn-outline-success" data-id="<?=$order['id'];?>" id="<?=$order['id'];?>" data-bs-toggle="modal" data-bs-target="#modalOs" data-bs-whatever="<?=$order['id'];?>">Ver OS</button>
-                        <a class="btn btn-danger" href="delete_os.php?id=<?=$order['id'];?>" onclick="return confirm('Deseja mesmo excluir a OS?')">Excluir</a>
+                    <td class="d-flex">
+                        <button class="btn btn-outline-success mx-2" data-id="<?=$order['id'];?>" id="<?=$order['id'];?>" data-bs-toggle="modal" data-bs-target="#modalOs" data-bs-whatever="<?=$order['id'];?>">Ver OS</button>
+                        <form action="delete_os.php" method="POST">
+                            <input type="hidden" name="id" value="<?=$order['id'];?>">
+                            <button type="submit" class="btn btn-danger" href="#" onclick="return confirm('Deseja mesmo excluir a OS?')">Excluir</a>
+                        </form>
                     </td>
                 </tr>
                 <?php endforeach;?>
@@ -108,7 +117,7 @@ $data = $list->list();
                     </div>
             </div>
             <div class="modal-footer" id="modal-footer">
-                <a type="button" class="btn btn-primary" id="updateOsButton" onclick="updateOs(event)">Alterar OS</a>
+                <a id="updateOsButton" class="btn btn-primary">Atualizar OS</a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar janela</button>
             </div>
             </div>

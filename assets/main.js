@@ -1,3 +1,5 @@
+import addElement from "./addElement.js"
+
 var modalOs = document.getElementById('modalOs')
 modalOs.addEventListener('show.bs.modal', function (event) {
   var button = event.relatedTarget
@@ -8,7 +10,7 @@ modalOs.addEventListener('show.bs.modal', function (event) {
 })
 
 let buttons = document.querySelectorAll('[data-id]')
-for( button of buttons ) {
+for( let button of buttons ) {
     button.addEventListener('click', function(event) {
         let id = event.target.getAttribute('id')
 
@@ -39,9 +41,12 @@ function fetchOs( id ) {
 }
 
 function cleanModal() {
-    if( document.contains(document.getElementById('badge')) ) {
-        document.getElementById('badge').remove()
-        document.getElementById('card-body').innerHTML = ""
+    let badge = document.getElementById('badge')
+    let cardBody = document.getElementById('card-body')
+
+    if( document.contains(badge) ) {
+        badge.remove()
+        cardBody.innerHTML = ""
     }
 }
 
@@ -61,30 +66,41 @@ function populateModal( data ) {
     if ( data.os.status == "Fechada" ) {
         badgeColor = "bg-danger"
     }
-
-    let badge = document.createElement('span')
-    badge.setAttribute('class', "badge " + badgeColor )
-    badge.setAttribute('id', "badge")
-    badge.textContent = data.os.status
+    var attributes = {
+        class: "badge " + badgeColor,
+        id: "badge"
+    }
+    var content = data.os.status
+    var badge = addElement("span", attributes, content)
 
     labelChild.after(badge)
 
     //Adicionar o número da OS junto com o modal
     let osId = modalOs.querySelector('.card-header')
-
-    osId.innerHTML = "Histórico da Os" + " - " + data.os.id
+    const osType = function() {
+        if( data.os.type == "Instalao" || data.os.type == "Instalação" ) {
+            return "Instalação"
+        } else {
+            return data.os.type
+        }
+    }
+    osId.innerHTML = "Histórico da Os" + " - " + data.os.id + " - " + osType()
 
     //Adicionar o horário de criação da OS
-    let cardTitle = document.createElement('h6')
-    cardTitle.setAttribute( 'class', "card-title" )
-    cardTitle.textContent = data.os.creation_time + " - Abertura da OS"
+    var attributes = {
+        class: "card-title"
+    }
+    var content = data.os.creation_time + " - Abertura da OS"
+    let cardTitle = addElement("h6", attributes, content )
 
     modalCard.appendChild(cardTitle)
 
     //Adicionar a descrição da criação da OS
-    let cardText = document.createElement('p')
-    cardText.setAttribute( 'class', "card-text" )
-    cardText.textContent = data.os.creation_user + " - " + data.os.description
+    var attributes = {
+        class: "card-text"
+    }
+    var content = data.os.creation_user + " - " + data.os.description
+    let cardText = addElement('p', attributes, content )
     modalCard.appendChild(cardText)
     //Adicionar o HR entre as atualizações
     
@@ -94,71 +110,33 @@ function populateModal( data ) {
     let updates = data.updates
     if ( updates ) {
         for( let i = 0; i < updates.length; i++ ) {
-            let updateTitle = document.createElement('h6')
-            updateTitle.setAttribute( 'class', "card-title" )
-            updateTitle.textContent = updates[i].update_time + " - Atualização da OS"
+            var attributes = {
+                class: "card-title"
+            }
+            var content = updates[i].update_time + " - Atualização da OS"
+            let updateTitle = addElement('h6', attributes, content )
     
             modalCard.appendChild(updateTitle)
     
-            let updateText = document.createElement('p')
-            updateText.setAttribute( 'class', "card-text" )
-            updateText.textContent = updates[i].update_user + " - " + updates[i].update_content
+            var attributes = {
+                class: "card-text"
+            }
+            var content = updates[i].update_user + " - " + updates[i].update_content
+            let updateText = addElement('p', attributes, content )
             modalCard.appendChild(updateText)
     
             //Adicionar o HR entre as atualizações
-            let hr = document.createElement('hr')
+            let hr = addElement('hr')
             modalCard.appendChild(hr)
         }
     }
     //Adicionar o id no botão de atualizar OS
-    updateOsButton.setAttribute('data-id_os', data.os.id )
-}
-
-function updateOs( event ) {
-    id = event.target
-    idAttr = event.target.getAttribute('data-id_os')
-    let inputSelect = document.createElement('div')
-    inputSelect.setAttribute( 'class', "mb-3" )
-    inputSelect.innerHTML = 
-        `<div class="form-group">
-            <label for="status">Status</label>
-            <select name="status" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                <option value="Aberta">Aberta</option>
-                <option value="Fechada">Fechada</option>
-            </select>
-        </div>`
-
-    modalCard.appendChild(inputSelect)
-
-    let inputText = document.createElement('div')
-    inputText.setAttribute( 'class', "mb-3" )
-    inputText.innerHTML = 
-        `<label for="exampleFormControlTextarea1" class="form-label">Descrição</label>
-         <textarea class="form-control" name="update-content" id="exampleFormControlTextarea1" rows="3"></textarea>`
-    modalCard.appendChild(inputText)
+    if( data.os.status == "Fechada") {
+        updateOsButton.setAttribute("disabled", true);
+    } else {
+        updateOsButton.setAttribute('data-id_os', data.os.id )
+        updateOsButton.setAttribute('href', "update_os.php?id=" + data.os.id )
+    }
     
-    id.textContent = "Salvar alterações"
-    id.setAttribute('onclick', "")
-    id.addEventListener('click', event => {
-        id_os = event.target.getAttribute('data-id_os')
-        
-        fetchUpdate( id_os )
-    })
-}
-
-function fetchUpdate( id ) {
-    const url = "../pages/update_os_action.php"
-    const data = {
-        id_os: id
-    }
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }
-    fetch( url, options )
-    .then( res => res.text() )
-    .then( data => console.log(data))
+    
 }
