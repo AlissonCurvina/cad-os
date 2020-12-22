@@ -2,4 +2,4 @@
 $dbName = 'cad-os';
 $dbUser = 'phpmyadmin';
 $dbHost = 'localhost';
-$dbPwd = '201161';
+$dbPwd = '';
